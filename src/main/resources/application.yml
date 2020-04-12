@@ -1,0 +1,38 @@
+#Propiedades del Servidor
+server:
+  port: 8080
+#Propiedades de Spring
+spring:
+  #Propiedades relacionadas con la aplicación
+  application:
+    name: producciones-academicas-api
+  #Propiedades del jpa
+  jpa:
+    #Comentarios de sql
+    show-sql: true
+    #ORM usado y propiedades
+    hibernate:
+      ddl-auto: update
+    #Dialecto usado para peticiones
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  #Correción Temporal del error se debe cambiar
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  #Configuración propiedades DataSource Spring
+  #El tipo de JDBC ya se incluye por defecto no es necesario agregarlo
+  datasource:
+    url: jdbc:postgresql://ec2-23-21-225-251.compute-1.amazonaws.com:5432/d85p41kmc2941c?ssl=false&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    driver-class-name: org.postgresql.Driver
+    username: ipqcydhkntcbhj
+    password: 61132909bc0cde56ea480f9b6d0657893c36a83ba01e92b0921e793e3c7ebe8e
+    #Propiedades espeficicas de hikari
+    hikari:
+      #Configuración del pool de conexiones, para más propiedades mirar https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby
+      maximum-pool-size: 5
