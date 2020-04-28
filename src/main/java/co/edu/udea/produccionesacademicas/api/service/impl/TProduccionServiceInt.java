@@ -5,5 +5,7 @@ import co.edu.udea.produccionesacademicas.api.model.TipoProduccion;
 import java.util.List;
 
 public interface TProduccionServiceInt {
-    public List<TipoProduccion> getTProducciones();
+    List<TipoProduccion> getTProducciones();
+
+    TipoProduccion getTipoProduccion(Integer id);
 }

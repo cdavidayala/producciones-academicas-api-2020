@@ -7,10 +7,19 @@ import java.util.List;
 
 public interface ProduccionServiceInt {
 
-    public List<Produccion> getProducciones();
-    public Produccion addProduccion(Produccion produccion);
-    public Produccion getProduccion(Integer id);
-    public PagingResult<Produccion> getProduccionesPagina(int page, int limit, String sortActive, String sortDirection);
-    public PagingResult<Produccion> getProduccionesPaginaTitulo(int page, int limit, String sortActive, String sortDirection, String term);
-    public PagingResult<Produccion> getProduccionesPaginaResumen(int page, int limit, String sortActive, String sortDirection, String term);
+    List<Produccion> getProducciones();
+
+    Produccion addProduccion(Produccion produccion);
+
+    Produccion getProduccion(Integer id);
+
+    Produccion updateProduccion(Integer id, Produccion produccionUpdate);
+
+    void deleteProduccion(Integer id);
+
+    PagingResult<Produccion> getProduccionesPagina(int page, int limit, String sortActive, String sortDirection);
+
+    PagingResult<Produccion> getProduccionesPaginaTitulo(int page, int limit, String sortActive, String sortDirection, String term);
+
+    PagingResult<Produccion> getProduccionesPaginaResumen(int page, int limit, String sortActive, String sortDirection, String term);
 }

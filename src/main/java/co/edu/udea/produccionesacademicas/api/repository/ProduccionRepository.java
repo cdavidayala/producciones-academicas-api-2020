@@ -15,4 +15,5 @@ public interface ProduccionRepository extends JpaRepository<Produccion, Integer>
     List<Produccion> findByTituloContaining(String titulo);
     Page<Produccion> findByResumenContaining(String resumen, Pageable pageableRequest);
     List<Produccion> findByResumenContaining(String resumen);
+    //Optional<Produccion> findByID(int id);
 }

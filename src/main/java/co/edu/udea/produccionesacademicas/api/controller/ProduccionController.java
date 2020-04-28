@@ -3,9 +3,11 @@ package co.edu.udea.produccionesacademicas.api.controller;
 import co.edu.udea.produccionesacademicas.api.model.PagingResult;
 import co.edu.udea.produccionesacademicas.api.model.Produccion;
 import co.edu.udea.produccionesacademicas.api.service.impl.ProduccionServiceInt;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -14,20 +16,35 @@ public class ProduccionController {
 
     private ProduccionServiceInt produccionService;
 
-    public ProduccionController(ProduccionServiceInt produccionService){
+    public ProduccionController(ProduccionServiceInt produccionService) {
         this.produccionService = produccionService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Produccion>> getProducciones(){return ResponseEntity.ok(produccionService.getProducciones());}
+    public ResponseEntity<List<Produccion>> getProducciones() {
+        return ResponseEntity.ok(produccionService.getProducciones());
+    }
 
-    @PostMapping
-    public ResponseEntity<Produccion> addProduccion(@RequestBody Produccion newProduccion){
-        return ResponseEntity.ok(produccionService.addProduccion(newProduccion));
+    @PostMapping(value = "add")
+    public ResponseEntity<Produccion> addProduccion(@Valid @RequestBody Produccion newProduccion) {
+        //return ResponseEntity.ok(produccionService.addProduccion(newProduccion));
+        return new ResponseEntity<Produccion>(produccionService.addProduccion(newProduccion), HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/update/{id}")
+    public ResponseEntity<Produccion> updateProduccion(@PathVariable(value = "id") Integer id, @Valid @RequestBody Produccion produccion) {
+        return new ResponseEntity<Produccion>(produccionService.updateProduccion(id, produccion), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteProduccion(@PathVariable(value = "id") Integer id) {
+
+        produccionService.deleteProduccion(id);
+        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "consultar/{id}")
-    public ResponseEntity<Produccion> getHero(@PathVariable("id") Integer id){
+    public ResponseEntity<Produccion> getProduccion(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(produccionService.getProduccion(id));
     }
 

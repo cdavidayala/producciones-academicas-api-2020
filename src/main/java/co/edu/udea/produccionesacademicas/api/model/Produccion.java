@@ -1,17 +1,24 @@
 package co.edu.udea.produccionesacademicas.api.model;
 
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name="Producciones")
+@Table(name = "Producciones")
 public class Produccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int produccionID;
+    @NonNull
+    @NotEmpty(message = "'make' field was empty")
     private String titulo;
+    @NonNull
+    @NotEmpty(message = "'make' field was empty")
     private String resumen;
     private Date fechaPublicacion;
 
@@ -25,7 +32,15 @@ public class Produccion {
     @OneToMany(mappedBy = "produccion", fetch = FetchType.LAZY)
     private Set<CategoriasPorProduccion> categoriasPorProduccion;
 
-    public Produccion(){}
+    public Produccion() {
+    }
+
+    public Produccion(int produccionID, String titulo, String resumen, Date fechaPublicacion) {
+        this.produccionID = produccionID;
+        this.titulo = titulo;
+        this.resumen = resumen;
+        this.fechaPublicacion = fechaPublicacion;
+    }
 
     public Produccion(int produccionID, String titulo, String resumen, Date fechaPublicacion, TipoProduccion tipoProduccion) {
         this.produccionID = produccionID;
