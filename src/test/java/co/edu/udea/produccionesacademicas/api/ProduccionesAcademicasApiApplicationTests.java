@@ -1,79 +1,108 @@
 package co.edu.udea.produccionesacademicas.api;
 
-import co.edu.udea.produccionesacademicas.api.model.Categoria;
+import co.edu.udea.produccionesacademicas.api.controller.ProduccionController;
+import co.edu.udea.produccionesacademicas.api.model.Produccion;
+import co.edu.udea.produccionesacademicas.api.service.impl.ProduccionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@RunWith(SpringRunner.class)
-@SpringBootTest()
+@WebMvcTest(ProduccionController.class)
+@ActiveProfiles("test")
 class ProduccionesAcademicasApiApplicationTests {
 
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper mapper;
+
+    @MockBean
+    ProduccionService produccionService;
+
     @Test
-    public void getProduccionesListSuccess() throws URISyntaxException {
-        RestTemplate restTemplate = new RestTemplate();
+    public void obtener_Producciones_returnsOkWithListOfProducciones() throws Exception {
 
-        final String baseUrl = "http://localhost:8080/producciones/";
-        URI uri = new URI(baseUrl);
+        List<Produccion> producciones = new ArrayList<>();
+        Produccion produccion1 = new Produccion(99, "Titulo Prueba", "Resumen Prueba", new Date());
+        Produccion produccion2 = new Produccion(98, "Titulo Prueba2", "Resumen Prueba2", new Date());
+        producciones.add(produccion1);
+        producciones.add(produccion2);
 
-        ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+        Mockito.when(produccionService.getProducciones()).thenReturn(producciones);
 
-        //Verify request succeed
-        assertEquals(200, result.getStatusCodeValue());
-        assertEquals(true, result.getBody().contains("produccionID"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/producciones").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].produccionID", is(99)))
+                .andExpect(jsonPath("$[0].titulo", is("Titulo Prueba")))
+                .andExpect(jsonPath("$[1].produccionID", is(98)))
+                .andExpect(jsonPath("$[1].titulo", is("Titulo Prueba2")));
     }
 
     @Test
-    public void getProduccionIdSuccess() throws URISyntaxException {
-        RestTemplate restTemplate = new RestTemplate();
+    public void crearNuevaProduccion_andReturnsObjWith201() throws Exception {
+        Produccion produccion = new Produccion(70, "Titulo Prueba", "Resumen Prueba", new Date());
 
-        final String baseUrl = "http://localhost:8080/producciones/consultar/6";
-        URI uri = new URI(baseUrl);
+        Mockito.when(produccionService.addProduccion(Mockito.any(Produccion.class))).thenReturn(produccion);
 
-        ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post("/producciones/add")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(this.mapper.writeValueAsBytes(produccion));
 
-        //System.out.print(result.getTitulo());
-
-        //Verify request succeed
-        assertEquals(200, result.getStatusCodeValue());
-        assertEquals(true, result.getBody().contains("\"produccionID\":6"));
+        mockMvc.perform(builder).andExpect(status().isCreated()).andExpect(jsonPath("$.produccionID", is(70)))
+                .andExpect(MockMvcResultMatchers.content().string(this.mapper.writeValueAsString(produccion)));
     }
 
     @Test
-    public void getProduccionIdFailed() throws URISyntaxException {
-        RestTemplate restTemplate = new RestTemplate();
+    public void post_submitsInvalidProduccion_WithEmptyTitulo_Returns400() throws Exception {
+        Produccion produccion = new Produccion(58, "", "Resumen Prueba", new Date());
 
-        final String baseUrl = "http://localhost:8080/producciones/consultar/7";
-        URI uri = new URI(baseUrl);
+        String produccionJsonString = this.mapper.writeValueAsString(produccion);
 
-        ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/producciones/add")
+                .contentType(MediaType.APPLICATION_JSON).content(produccionJsonString)).andExpect(status().isBadRequest());
 
-        //Verify request succeed
-        assertEquals(200, result.getStatusCodeValue());
-        assertNull(result.getBody());
+        assertEquals(MethodArgumentNotValidException.class,
+                resultActions.andReturn().getResolvedException().getClass());
+        assertTrue(resultActions.andReturn().getResolvedException().getMessage().contains("'make' field was empty"));
     }
 
+
     @Test
-    public void WhenFindByMateria_thenReturnCategoria() throws URISyntaxException {
-        Categoria categoria1 = new Categoria("Computacion", "Elementos Finitos");
+    public void delete_deleteProduccion_Returns204Status() throws Exception {
+        Integer produccionID = 48;
 
-        RestTemplate restTemplate = new RestTemplate();
+        ProduccionService serviceSpy = Mockito.spy(produccionService);
+        Mockito.doNothing().when(serviceSpy).deleteProduccion(produccionID);
 
-        final String baseUrl = "http://localhost:8080/categorias/m/" + categoria1.getMateria();
-        URI uri = new URI(baseUrl);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/producciones/delete/48")
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
-        ResponseEntity<Categoria> found = restTemplate.getForEntity(uri, Categoria.class);
-
-        assertThat(found.getBody().getMateria())
-                .isEqualTo(categoria1.getMateria());
+        verify(produccionService, times(1)).deleteProduccion(produccionID);
     }
 
 }
