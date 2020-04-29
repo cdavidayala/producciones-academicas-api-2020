@@ -27,20 +27,19 @@ public class ProduccionController {
 
     @PostMapping(value = "add")
     public ResponseEntity<Produccion> addProduccion(@Valid @RequestBody Produccion newProduccion) {
-        //return ResponseEntity.ok(produccionService.addProduccion(newProduccion));
-        return new ResponseEntity<Produccion>(produccionService.addProduccion(newProduccion), HttpStatus.CREATED);
+        return new ResponseEntity<>(produccionService.addProduccion(newProduccion), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<Produccion> updateProduccion(@PathVariable(value = "id") Integer id, @Valid @RequestBody Produccion produccion) {
-        return new ResponseEntity<Produccion>(produccionService.updateProduccion(id, produccion), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(produccionService.updateProduccion(id, produccion), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteProduccion(@PathVariable(value = "id") Integer id) {
 
         produccionService.deleteProduccion(id);
-        return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "consultar/{id}")

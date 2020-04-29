@@ -25,13 +25,9 @@ public class ProduccionService implements ProduccionServiceInt{
 
     @Autowired
     private ProduccionRepository produccionRepository;
-    private AutoresPorProduccionRepository autoresPorProduccionRepository;
-    private CategoriasPorProduccionRepository categoriasPorProduccionRepository;
 
     public ProduccionService(ProduccionRepository produccionRepository, AutoresPorProduccionRepository autoresPorProduccionRepository, CategoriasPorProduccionRepository categoriasPorProduccionRepository){
         this.produccionRepository = produccionRepository;
-        this.categoriasPorProduccionRepository = categoriasPorProduccionRepository;
-        this.autoresPorProduccionRepository = autoresPorProduccionRepository;
     }
 
     @Override
@@ -40,11 +36,7 @@ public class ProduccionService implements ProduccionServiceInt{
     @Override
     public Produccion getProduccion(Integer id) {
         Optional<Produccion> posibleProduccion = produccionRepository.findById(id);
-        posibleProduccion = produccionRepository.findById(id);
-        if(posibleProduccion.isPresent()){
-            return posibleProduccion.get();
-        }else {
-            return null;        }
+        return posibleProduccion.orElse(null);
     }
 
     public PagingResult<Produccion> getProduccionesPagina(int pageIndex, int pageSize, String sortActive, String sortDirection) {
@@ -61,7 +53,7 @@ public class ProduccionService implements ProduccionServiceInt{
             BeanUtils.copyProperties(produccion, produccionDto);
             returnValue.add(produccionDto);
         }
-        return new PagingResult<Produccion>(returnValue,
+        return new PagingResult<>(returnValue,
                 produccionRepository.findAll().size());
     }
 
@@ -74,14 +66,13 @@ public class ProduccionService implements ProduccionServiceInt{
         List<Produccion> returnValue = new ArrayList<>();
         Pageable pageableRequest = PageRequest.of(pageIndex, pageSize, sort);
         Page<Produccion> producciones = produccionRepository.findByTituloContaining(term, pageableRequest);
-        List<Produccion> produccionesEntidades = producciones.getContent();
 
         for (Produccion produccion : producciones) {
             Produccion produccionDto = new Produccion();
             BeanUtils.copyProperties(produccion, produccionDto);
             returnValue.add(produccionDto);
         }
-        return new PagingResult<Produccion>(returnValue,
+        return new PagingResult<>(returnValue,
                 produccionRepository.findByTituloContaining(term).size());
     }
 
@@ -94,35 +85,18 @@ public class ProduccionService implements ProduccionServiceInt{
         List<Produccion> returnValue = new ArrayList<>();
         Pageable pageableRequest = PageRequest.of(pageIndex, pageSize, sort);
         Page<Produccion> producciones = produccionRepository.findByResumenContaining(term, pageableRequest);
-        List<Produccion> produccionesEntidades = producciones.getContent();
 
         for (Produccion produccion : producciones) {
             Produccion produccionDto = new Produccion();
             BeanUtils.copyProperties(produccion, produccionDto);
             returnValue.add(produccionDto);
         }
-        return new PagingResult<Produccion>(returnValue,
+        return new PagingResult<>(returnValue,
                 produccionRepository.findByResumenContaining(term).size());
     }
 
     public Produccion addProduccion(Produccion produccion){
         System.out.println(produccion);
-        /*if(produccion.getAutoresPorProducciones() != null) {
-            for (AutoresPorProducciones autorPorProduccion : produccion.getAutoresPorProducciones()) {
-                autoresPorProduccionRepository.save(autorPorProduccion);
-            }
-        }
-        if(produccion.getCategoriasPorProduccion() != null) {
-            for (CategoriasPorProduccion categoriasPorProduccion : produccion.getCategoriasPorProduccion()) {
-                //categoriasPorProduccion.setProduccion();
-                categoriasPorProduccionRepository.save(categoriasPorProduccion);
-            }
-        }*/
-        /* ya se hace desde el front end*/
-        /*TipoProduccion tempTipoProduccion = new TipoProduccion();
-        tempTipoProduccion.setTipoProdID(2);
-        tempTipoProduccion.setDescripcion("Trabajo de Grado");
-        produccion.setTipoProduccion(tempTipoProduccion);*/
         return produccionRepository.save(produccion);
     }
 
