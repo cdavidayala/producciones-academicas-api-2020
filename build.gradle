@@ -13,10 +13,11 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.2.RELEASE"
     }
 }
+
+
 // test
 // test publissdsad
 plugins {
-    id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'maven-publish'
@@ -50,8 +51,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     //testCompile group: 'org.mockito', name: 'mockito-core', version: '2.8.9'
     testImplementation 'org.mockito:mockito-junit-jupiter:2.28.2'
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
-    providedCompile group: 'org.springframework.boot', name: 'spring-boot-dependencies', version: '2.2.2.RELEASE', ext: 'pom'
 
 
 }
@@ -100,16 +99,6 @@ sonarqube {
     }
 }
 
-sonarqubeQualityGate {
-  failOnWarn true // use this variable to force a failure if warnings exist. Default: false
-  sleep '1000' // the amount of time to sleep between api calls while scan is queued. Time is in milliseconds. Default: 1000
-  maxWait '1800000' // the amount of time to wait for scan to complete before failing. Time is in milliseconds. Default: 1800000 (30min)
-  gate 'Sonar way' // override default gate
-  profile 'Sonar way' // override default profile
- // username ''
- // password ''
- // apiKey ''
-}
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
