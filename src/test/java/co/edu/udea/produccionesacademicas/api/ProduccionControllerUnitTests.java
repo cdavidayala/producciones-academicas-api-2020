@@ -106,7 +106,7 @@ public class ProduccionControllerUnitTests {
                 .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
         verify(produccionService, times(1)).deleteProduccion(produccionID);
-        fail();
+        
     }
 
 /*
