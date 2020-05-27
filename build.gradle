@@ -63,7 +63,7 @@ dependencies {
 allprojects {
     apply plugin: "com.jfrog.artifactory"
     apply plugin: "org.sonarqube"
-    apply plugin: "com.usaa.sonar-quality-gates"
+  //  apply plugin: "com.usaa.sonar-quality-gates"
     apply plugin: "jacoco"
     apply plugin: 'org.springframework.boot'
 }
