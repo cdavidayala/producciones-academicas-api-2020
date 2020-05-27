@@ -62,8 +62,10 @@ allprojects {
 }
 
 test {
-    useJUnitPlatform()
+    failFast = true
+    useJUnitPlatform()    
 }
+
 
 artifactory {
     contextUrl = 'http://181.206.19.248:8081/artifactory'   //The base Artifactory URL if not overridden by the publisher/resolver
