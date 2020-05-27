@@ -12,11 +12,11 @@ buildscript {
         // classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.2.RELEASE"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
-        //classpath "gradle.plugin.com.usaa.plugin.gradle:sonar-quality-gates-plugin:2.0.0"
+        // classpath "gradle.plugin.com.usaa.plugin.gradle:sonar-quality-gates-plugin:2.0.0"
         
     }
 }
-
+//
 
 // test
 // test publissdsad
