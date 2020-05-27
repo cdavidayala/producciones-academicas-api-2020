@@ -9,7 +9,7 @@ buildscript {
     dependencies {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
-        classpath "com.usaa.plugin.gradle:sonarqube-quality-gates:1.0"
+        classpath "com.usaa.plugin.gradle:sonarqube-quality-gates"
     }
 }
 // test
