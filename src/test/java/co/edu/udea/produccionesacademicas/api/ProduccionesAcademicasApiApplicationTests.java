@@ -89,7 +89,7 @@ class ProduccionesAcademicasApiApplicationTests {
         assertEquals(MethodArgumentNotValidException.class,
                 resultActions.andReturn().getResolvedException().getClass());
         assertTrue(resultActions.andReturn().getResolvedException().getMessage().contains("'make' field was empty"));
-        //asserTrue(false);
+        fail("fail inducido");
     }
 
 
