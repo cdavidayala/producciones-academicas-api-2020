@@ -6,11 +6,6 @@ pipeline {
                 sh './gradlew build --scan'
             }
         }
-        stage('Test') {
-            steps {
-                sh './gradlew test'
-            }
-        }
         
         stage('sonarqube') {
             steps {
