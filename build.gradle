@@ -9,7 +9,6 @@ buildscript {
     dependencies {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7"
-        classpath "gradle.plugin.com.usaa.plugin.gradle:sonar-quality-gates-plugin:2.0.0"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.2.RELEASE"
     }
 }
@@ -59,7 +58,6 @@ allprojects {
     apply plugin: "com.jfrog.artifactory"
     apply plugin: "org.sonarqube"
     apply plugin: "jacoco"
-    apply plugin: "com.usaa.sonar-quality-gates"
     apply plugin: 'org.springframework.boot'
 }
 
