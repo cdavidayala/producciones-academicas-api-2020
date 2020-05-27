@@ -58,6 +58,7 @@ allprojects {
     apply plugin: "org.sonarqube"
     apply plugin: "jacoco"
     apply plugin: "com.usaa.sonar-quality-gates"
+    apply plugin: 'org.springframework.boot'
 }
 
 test {
