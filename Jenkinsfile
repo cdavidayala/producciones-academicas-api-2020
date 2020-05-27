@@ -18,7 +18,7 @@ pipeline {
             }
         }
         
-        stage('Example Deploy') {
+        stage('Deploy') {
             when {
                 branch 'master'
             }
